@@ -1,6 +1,9 @@
 package utils
 
-import "os"
+import (
+	"os"
+	"strconv"
+)
 
 func ReadFileToString(path string) (string, error) {
 	data, err := os.ReadFile(path)
@@ -9,6 +12,13 @@ func ReadFileToString(path string) (string, error) {
 	}
 
 	return string(data), nil
+}
+
+func MustParseAsInt(str string) int {
+	val, err := strconv.Atoi(str)
+	CheckForErr(err)
+
+	return val
 }
 
 func CheckForErr(e error) {
