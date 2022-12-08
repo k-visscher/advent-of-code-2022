@@ -8,6 +8,7 @@ import (
 	"advent-of-code-2022/internal/pkg/day5"
 	"advent-of-code-2022/internal/pkg/day6"
 	"advent-of-code-2022/internal/pkg/day7"
+	"advent-of-code-2022/internal/pkg/day8"
 	"fmt"
 )
 
@@ -32,4 +33,6 @@ func main() {
 
 	fmt.Printf("day 7, star 1: %d\n", day7.StarOne("assets/input_day_7.txt"))
 	fmt.Printf("day 7, star 2: %d\n", day7.StarTwo("assets/input_day_7.txt"))
+
+	fmt.Printf("day 8, star 1: %d\n", day8.StarOne("assets/input_day_8.txt"))
 }
