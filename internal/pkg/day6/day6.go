@@ -41,8 +41,7 @@ How many characters need to be processed before the first start-of-packet marker
 */
 
 func StarOne(input_path string) int {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	i := 4
 	for ; i < len(input); i++ {
@@ -78,8 +77,7 @@ Here are the first positions of start-of-message markers for all of the above ex
 How many characters need to be processed before the first start-of-message marker is detected?
 */
 func StarTwo(input_path string) int {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	i := 14
 	for ; i < len(input); i++ {

@@ -1,12 +1,19 @@
 package utils
 
 import (
-	"os"
+	"advent-of-code-2022/assets"
 	"strconv"
 )
 
+func MustReadFileToString(path string) string {
+	data, err := assets.FS.ReadFile(path)
+	CheckForErr(err)
+
+	return string(data)
+}
+
 func ReadFileToString(path string) (string, error) {
-	data, err := os.ReadFile(path)
+	data, err := assets.FS.ReadFile(path)
 	if err != nil {
 		return "", err
 	}

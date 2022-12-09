@@ -43,8 +43,7 @@ Find the item type that appears in both compartments of each rucksack. What is t
 */
 
 func StarOne(input_path string) int {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	priorities := make([]int, 0)
 
@@ -126,8 +125,7 @@ Priorities for these items must still be found to organize the sticker attachmen
 Find the item type that corresponds to the badges of each three-Elf group. What is the sum of the priorities of those item types?
 */
 func StarTwo(input_path string) int {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	priorities := make([]int, 0)
 

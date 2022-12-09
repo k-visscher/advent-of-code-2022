@@ -67,8 +67,7 @@ After the rearrangement procedure completes, what crate ends up on top of each s
 */
 
 func StarOne(input_path string) string {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	lines := strings.Split(input, "\n")
 
@@ -193,8 +192,7 @@ In this example, the CrateMover 9001 has put the crates in a totally different o
 Before the rearrangement process finishes, update your simulation so that the Elves know where they should stand to be ready to unload the final supplies. After the rearrangement procedure completes, what crate ends up on top of each stack?
 */
 func StarTwo(input_path string) string {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	lines := strings.Split(input, "\n")
 

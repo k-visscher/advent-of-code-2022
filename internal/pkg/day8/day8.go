@@ -20,40 +20,43 @@ func CalculateSenicScore(treeMap *[][]int, x int, y int) int {
 	scoreToTheRight := 0
 	scoreToTheBottom := 0
 	scoreToTheTop := 0
-	for xi := minX; xi < x; xi++ {
+
+	for xi := x + 1; xi <= maxX; xi++ {
 		otherHeight := refTreeMap[y][xi]
+		scoreToTheRight++
 		if otherHeight >= height {
-			visibleFromTheLeft = false
 			break
 		}
 	}
 
-	for xi := maxX; xi > x; xi-- {
+	for xi := x - 1; xi >= minX; xi-- {
 		otherHeight := refTreeMap[y][xi]
+		scoreToTheLeft++
 		if otherHeight >= height {
-			visibleFromTheRight = false
 			break
 		}
 	}
 
-	visibleFromTheTop := true
-	for yi := minY; yi < y; yi++ {
+	for yi := y + 1; yi <= maxY; yi++ {
 		otherHeight := refTreeMap[yi][x]
+		scoreToTheBottom++
 		if otherHeight >= height {
-			visibleFromTheTop = false
 			break
 		}
 	}
 
-	visibleFromTheBottom := true
-	for yi := maxY; yi > y; yi-- {
+	for yi := y - 1; yi >= minY; yi-- {
 		otherHeight := refTreeMap[yi][x]
+		scoreToTheTop++
 		if otherHeight >= height {
-			visibleFromTheBottom = false
 			break
 		}
 	}
 
+	return scoreToTheTop *
+		scoreToTheLeft *
+		scoreToTheBottom *
+		scoreToTheRight
 }
 
 func IsVisible(treeMap *[][]int, x int, y int) bool {
@@ -143,8 +146,7 @@ With 16 trees visible on the edge and another 5 visible in the interior, a total
 Consider your map; how many trees are visible from outside the grid?
 */
 func StarOne(input_path string) int {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	lines := strings.Split(input, "\n")
 
@@ -209,8 +211,7 @@ This tree's scenic score is 8 (2 * 2 * 1 * 2); this is the ideal spot for the tr
 Consider each tree on your map. What is the highest scenic score possible for any tree?
 */
 func StarTwo(input_path string) int {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	lines := strings.Split(input, "\n")
 
@@ -221,14 +222,15 @@ func StarTwo(input_path string) int {
 		}
 	}
 
-	visible := 0
+	maxScore := 0
 	for y := range treeMap {
 		for x := range treeMap[y] {
-			if IsVisible(&treeMap, x, y) {
-				visible++
+			score := CalculateSenicScore(&treeMap, x, y)
+			if score >= maxScore {
+				maxScore = score
 			}
 		}
 	}
 
-	return visible
+	return maxScore
 }

@@ -60,8 +60,7 @@ func isBetween(aStart int, aEnd int, bStart int, bEnd int) bool {
 }
 
 func StarOne(input_path string) int {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	lines := strings.Split(input, "\n")
 	count := 0
@@ -111,8 +110,7 @@ func hasOverlap(aStart int, aEnd int, bStart int, bEnd int) bool {
 }
 
 func StarTwo(input_path string) int {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	lines := strings.Split(input, "\n")
 	count := 0

@@ -117,43 +117,38 @@ func (n *Node) TotalSize() int {
 	return result
 }
 
-var cum_sum = 0
-
-func (n *Node) CumSum() {
+func (n *Node) CumSum(result *int) {
 	if n.NodeType == File {
 		return
 	}
 
 	for _, node := range n.Childeren {
-		node.CumSum()
+		node.CumSum(result)
 	}
 
 	totalSize := n.TotalSize()
 	if totalSize < 100_000 {
-		cum_sum += totalSize
+		*result += totalSize
 	}
 }
 
-var could_be_freed = make([]*Node, 0)
-
-func (n *Node) FindDirsToFree(to_be_freed int) {
+func (n *Node) FindDirsToFree(to_be_freed int, could_be_freed *[]int) {
 	if n.NodeType == File {
 		return
 	}
 
 	for _, node := range n.Childeren {
-		node.FindDirsToFree(to_be_freed)
+		node.FindDirsToFree(to_be_freed, could_be_freed)
 	}
 
 	total_size := n.TotalSize()
 	if total_size >= to_be_freed {
-		could_be_freed = append(could_be_freed, n)
+		*could_be_freed = append(*could_be_freed, total_size)
 	}
 }
 
 func StarOne(input_path string) int {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	lines := strings.Split(input, "\n")[2:]
 
@@ -212,11 +207,11 @@ func StarOne(input_path string) int {
 		}
 	}
 
+	result := 0
 	for _, child := range root.Childeren {
-		child.CumSum()
+		child.CumSum(&result)
 	}
-
-	return cum_sum
+	return result
 }
 
 /*
@@ -240,8 +235,7 @@ Directories e and a are both too small; deleting them would not free up enough s
 Find the smallest directory that, if deleted, would free up enough space on the filesystem to run the update. What is the total size of that directory?
 */
 func StarTwo(input_path string) int {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	lines := strings.Split(input, "\n")[2:]
 
@@ -308,11 +302,12 @@ func StarTwo(input_path string) int {
 
 	to_be_freed := update_size - free_memory
 
-	root.FindDirsToFree(to_be_freed)
+	result := make([]int, 0)
+	root.FindDirsToFree(to_be_freed, &result)
 
-	sort.Slice(could_be_freed, func(i, j int) bool {
-		return could_be_freed[i].TotalSize() < could_be_freed[j].TotalSize()
+	sort.Slice(result, func(i, j int) bool {
+		return result[i] < result[j]
 	})
 
-	return could_be_freed[0].TotalSize()
+	return result[0]
 }

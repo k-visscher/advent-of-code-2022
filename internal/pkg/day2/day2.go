@@ -65,8 +65,7 @@ In this example, if you were to follow the strategy guide, you would get a total
 What would your total score be if everything goes exactly according to your strategy guide?
 */
 func StarOne(input_path string) int {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	score := 0
 	lines := strings.Split(input, "\n")
@@ -110,8 +109,7 @@ Following the Elf's instructions for the second column, what would your total sc
 */
 
 func StarTwo(input_path string) int {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	score := 0
 	lines := strings.Split(input, "\n")

@@ -6,7 +6,7 @@ import (
 )
 
 func TestDay2StarOne(t *testing.T) {
-	actual := day2.StarOne("data/test_input_day_2.txt")
+	actual := day2.StarOne("test_input_day_2.txt")
 
 	expected := 15
 
@@ -16,7 +16,7 @@ func TestDay2StarOne(t *testing.T) {
 }
 
 func TestDay2StarTwo(t *testing.T) {
-	actual := day2.StarTwo("data/test_input_day_2.txt")
+	actual := day2.StarTwo("test_input_day_2.txt")
 
 	expected := 12
 

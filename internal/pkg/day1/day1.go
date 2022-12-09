@@ -8,8 +8,7 @@ import (
 )
 
 func StarOne(input_path string) int {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	lines := strings.Split(input, "\n")
 
@@ -34,8 +33,7 @@ func StarOne(input_path string) int {
 }
 
 func StarTwo(input_path string) int {
-	input, err := utils.ReadFileToString(input_path)
-	utils.CheckForErr(err)
+	input := utils.MustReadFileToString(input_path)
 
 	lines := strings.Split(input, "\n")
 
