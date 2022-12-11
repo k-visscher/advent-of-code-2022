@@ -2,7 +2,6 @@ package day11
 
 import (
 	"advent-of-code-2022/internal/pkg/utils"
-	"fmt"
 	"math/big"
 	"regexp"
 	"sort"
@@ -268,21 +267,11 @@ func StarTwo(input_path string, t *testing.T) int64 {
 	}
 
 	for i := 0; i < 10000; i++ {
-		if t != nil {
-			t.Logf("starting round: %d", i)
-		} else {
-			fmt.Printf("starting round: %d", i)
-		}
-
+		t.Logf("starting round: %d", i)
 		for j := 0; j < len(monkeys); j++ {
 			monkeys[j].PlayRound(&monkeys)
 		}
-
-		if t != nil {
-			t.Logf("Finished round: %d", i)
-		} else {
-			fmt.Printf("Finished round: %d", i)
-		}
+		t.Logf("finished round: %d", i)
 	}
 
 	monkeyList := make([]*Monkey, 0)
