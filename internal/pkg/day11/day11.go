@@ -2,7 +2,6 @@ package day11
 
 import (
 	"advent-of-code-2022/internal/pkg/utils"
-	"math/big"
 	"regexp"
 	"sort"
 	"strconv"
@@ -37,7 +36,7 @@ type WorryOperand struct {
 }
 
 type Monkey struct {
-	Items []*big.Int
+	Items []int64
 
 	TestOperator TestOperator
 	TestOperand  int
@@ -59,58 +58,45 @@ func (m *Monkey) PlayRound(monkeys *map[int]*Monkey) {
 
 		m.Throw(newItem, (*monkeys)[targetIndex])
 	}
-	m.Items = make([]*big.Int, 0)
+	m.Items = make([]int64, 0)
 }
 
-func (m *Monkey) Inspect(item *big.Int) *big.Int {
+func (m *Monkey) Inspect(item int64) int64 {
 	level := item
-
-	constant := new(big.Int)
-	constant.SetInt64(int64(m.WorryOperand.Constant))
 
 	if m.WorryOperand.Type == Constant {
 		switch m.WorryOperator {
 		case Add:
-			level.Add(level, constant)
+			level += int64(m.WorryOperand.Constant)
 		case Multiply:
-			level.Mul(level, constant)
+			level *= int64(m.WorryOperand.Constant)
 		}
 	} else {
 		switch m.WorryOperator {
 		case Add:
-			level.Add(level, level)
+			level += level
 		case Multiply:
-			level.Mul(level, level)
+			level *= level
 		}
 	}
 
 	//three := new(big.Int)
 	//three.SetInt64(int64(3))
 
-	return level /*.Div(level, three)*/
+	return level / 3.0
 }
 
-func (m *Monkey) Test(item *big.Int) bool {
+func (m *Monkey) Test(item int64) bool {
 	/*
 		switch m.TestOperator {
 		case Divisible:
 
 		}
 	*/
-	z := new(big.Int)
-
-	op := new(big.Int)
-	op.SetInt64(int64(m.TestOperand))
-
-	zero := new(big.Int)
-	zero.SetInt64(int64(0))
-
-	z.Mod(item, op)
-
-	return z.Cmp(zero) == 0
+	return item%int64(m.TestOperand) == 0
 }
 
-func (*Monkey) Throw(item *big.Int, o *Monkey) {
+func (*Monkey) Throw(item int64, o *Monkey) {
 	o.Items = append(o.Items, item)
 }
 
@@ -131,15 +117,10 @@ func StarOne(input_path string) int64 {
 	for i := 0; i < len(lines); i += 7 {
 		number := utils.MustParseAsInt(monkey_expr.FindStringSubmatch(lines[i])[1:][0])
 
-		starting_items := make([]*big.Int, 0)
+		starting_items := make([]int64, 0)
 		raw_items := items_expr.FindStringSubmatch(lines[i+1])[1:][0]
 		for _, raw_item := range strings.Split(raw_items, ",") {
-			x := int64(utils.MustParseAsInt(strings.TrimSpace(raw_item)))
-
-			z := new(big.Int)
-			z.SetInt64(x)
-
-			starting_items = append(starting_items, z)
+			starting_items = append(starting_items, int64(utils.MustParseAsInt(strings.TrimSpace(raw_item))))
 		}
 
 		worry_groups := worry_expr.FindStringSubmatch(lines[i+2])[1:]
@@ -216,15 +197,10 @@ func StarTwo(input_path string, t *testing.T) int64 {
 	for i := 0; i < len(lines); i += 7 {
 		number := utils.MustParseAsInt(monkey_expr.FindStringSubmatch(lines[i])[1:][0])
 
-		starting_items := make([]*big.Int, 0)
+		starting_items := make([]int64, 0)
 		raw_items := items_expr.FindStringSubmatch(lines[i+1])[1:][0]
 		for _, raw_item := range strings.Split(raw_items, ",") {
-			x := int64(utils.MustParseAsInt(strings.TrimSpace(raw_item)))
-
-			z := new(big.Int)
-			z.SetInt64(x)
-
-			starting_items = append(starting_items, z)
+			starting_items = append(starting_items, int64(utils.MustParseAsInt(strings.TrimSpace(raw_item))))
 		}
 
 		worry_groups := worry_expr.FindStringSubmatch(lines[i+2])[1:]
