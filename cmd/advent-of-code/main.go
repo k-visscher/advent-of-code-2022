@@ -47,4 +47,5 @@ func main() {
 	fmt.Printf("day 10, star 2: \n%s\n", day10.StarTwo("input_day_10.txt"))
 
 	fmt.Printf("day 11, star 1: %d\n", day11.StarOne("input_day_11.txt"))
+	fmt.Printf("day 11, star 2: %d\n", day11.StarTwo("test_input_day_11.txt", nil))
 }
