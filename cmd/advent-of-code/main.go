@@ -4,6 +4,7 @@ import (
 	"advent-of-code-2022/internal/pkg/day1"
 	"advent-of-code-2022/internal/pkg/day10"
 	"advent-of-code-2022/internal/pkg/day11"
+	"advent-of-code-2022/internal/pkg/day12"
 	"advent-of-code-2022/internal/pkg/day2"
 	"advent-of-code-2022/internal/pkg/day3"
 	"advent-of-code-2022/internal/pkg/day4"
@@ -44,7 +45,11 @@ func main() {
 	//fmt.Printf("day 9, star 2: %d\n", day9.StarTwo("test_input_day_9_part_1.txt"))
 
 	fmt.Printf("day 10, star 1: %d\n", day10.StarOne("input_day_10.txt"))
-	fmt.Printf("day 10, star 2: \n%s\n", day10.StarTwo("input_day_10.txt"))
+	fmt.Printf("day 10, star 2: \n%s", day10.StarTwo("input_day_10.txt"))
 
 	fmt.Printf("day 11, star 1: %d\n", day11.StarOne("input_day_11.txt"))
+	fmt.Printf("day 11, star 2: %d\n", day11.StarTwo("input_day_11.txt"))
+
+	fmt.Printf("day 12, star 1: %d\n", day12.StarOne("input_day_12.txt"))
+	fmt.Printf("day 12, star 2: %d\n", day12.StarTwo("input_day_12.txt"))
 }

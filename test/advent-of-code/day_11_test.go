@@ -16,7 +16,7 @@ func TestDay11StarOne(t *testing.T) {
 }
 
 func TestDay11StarTwo(t *testing.T) {
-	actual := day11.StarTwo("test_input_day_11.txt", t)
+	actual := day11.StarTwo("test_input_day_11.txt")
 
 	expected := int64(2713310158)
 

@@ -6,7 +6,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"testing"
 )
 
 type TestOperator string
@@ -49,11 +48,11 @@ type Monkey struct {
 	WorryOperand WorryOperand
 }
 
-func (m *Monkey) PlayRound(monkeys *map[int]*Monkey) {
+func (m *Monkey) PlayRound(monkeys *map[int]*Monkey, modulus int64) {
 	for _, oldItem := range m.Items {
 		m.Inspections++
 
-		newItem := m.Inspect(oldItem)
+		newItem := m.Inspect(oldItem, modulus)
 		targetIndex := m.TestTargets[m.Test(newItem)]
 
 		m.Throw(newItem, (*monkeys)[targetIndex])
@@ -61,7 +60,7 @@ func (m *Monkey) PlayRound(monkeys *map[int]*Monkey) {
 	m.Items = make([]int64, 0)
 }
 
-func (m *Monkey) Inspect(item int64) int64 {
+func (m *Monkey) Inspect(item int64, modulus int64) int64 {
 	level := item
 
 	if m.WorryOperand.Type == Constant {
@@ -80,19 +79,14 @@ func (m *Monkey) Inspect(item int64) int64 {
 		}
 	}
 
-	//three := new(big.Int)
-	//three.SetInt64(int64(3))
+	if modulus == -1 {
+		return level / 3
+	}
 
-	return level / 3.0
+	return level % modulus
 }
 
 func (m *Monkey) Test(item int64) bool {
-	/*
-		switch m.TestOperator {
-		case Divisible:
-
-		}
-	*/
 	return item%int64(m.TestOperand) == 0
 }
 
@@ -164,7 +158,7 @@ func StarOne(input_path string) int64 {
 
 	for i := 0; i < 20; i++ {
 		for j := 0; j < len(monkeys); j++ {
-			monkeys[j].PlayRound(&monkeys)
+			monkeys[j].PlayRound(&monkeys, -1)
 		}
 	}
 
@@ -180,7 +174,7 @@ func StarOne(input_path string) int64 {
 	return monkeyList[0].Inspections * monkeyList[1].Inspections
 }
 
-func StarTwo(input_path string, t *testing.T) int64 {
+func StarTwo(input_path string) int64 {
 	input := utils.MustReadFileToString(input_path)
 
 	monkeys := make(map[int]*Monkey)
@@ -242,12 +236,15 @@ func StarTwo(input_path string, t *testing.T) int64 {
 		}
 	}
 
+	divisibility_product := 1
+	for _, monkey := range monkeys {
+		divisibility_product *= monkey.TestOperand
+	}
+
 	for i := 0; i < 10000; i++ {
-		t.Logf("starting round: %d", i)
 		for j := 0; j < len(monkeys); j++ {
-			monkeys[j].PlayRound(&monkeys)
+			monkeys[j].PlayRound(&monkeys, int64(divisibility_product))
 		}
-		t.Logf("finished round: %d", i)
 	}
 
 	monkeyList := make([]*Monkey, 0)
