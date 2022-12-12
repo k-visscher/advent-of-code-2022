@@ -23,6 +23,15 @@ func (s *Set[T]) ToSlice() []T {
 	return result
 }
 
+func (s *Set[T]) AddSlice(slice []T) {
+	if s.items == nil {
+		s.items = make(map[T]bool)
+	}
+	for _, x := range slice {
+		s.items[x] = true
+	}
+}
+
 func (s *Set[T]) Contains(t T) bool {
 	_, found := s.items[t]
 	return found

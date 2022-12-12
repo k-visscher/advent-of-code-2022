@@ -2,7 +2,6 @@ package day12
 
 import (
 	"advent-of-code-2022/internal/pkg/utils"
-	"sort"
 	"strings"
 )
 
@@ -93,22 +92,21 @@ func (g *Graph) GetVertexAtPos(p Position) *Vertex {
 }
 
 /*
- 1  procedure BFS(G, root) is
- 2      let Q be a queue
- 3      label root as explored
- 4      Q.enqueue(root)
- 5      while Q is not empty do
- 6          v := Q.dequeue()
- 7          if v is the goal then
- 8              return v
- 9          for all edges from v to w in G.adjacentEdges(v) do
+1  procedure BFS(G, root) is
+2      let Q be a queue
+3      label root as explored
+4      Q.enqueue(root)
+5      while Q is not empty do
+6          v := Q.dequeue()
+7          if v is the goal then
+8              return v
+9          for all edges from v to w in G.adjacentEdges(v) do
 10              if w is not labeled as explored then
 11                  label w as explored
 12                  w.parent := v
 13                  Q.enqueue(w)
 */
-
-func (g *Graph) bfs(s *Vertex, e *Vertex) int {
+func (g *Graph) bfs(s *Vertex, e utils.Set[*Vertex]) int {
 	steps := 0
 
 	q := utils.Queue[*Vertex]{}
@@ -119,7 +117,7 @@ func (g *Graph) bfs(s *Vertex, e *Vertex) int {
 
 	for q.Len() > 0 {
 		v := q.Dequeue()
-		if v == e {
+		if e.Contains(v) {
 			for v != nil && v.Parent != nil {
 				steps++
 				v = v.Parent
@@ -263,7 +261,9 @@ func StarOne(input_path string) int {
 		}
 	}
 
-	return graph.bfs(start, end)
+	endSet := utils.Set[*Vertex]{}
+	endSet.Add(end)
+	return graph.bfs(start, endSet)
 }
 
 func StarTwo(input_path string) int {
@@ -315,7 +315,7 @@ func StarTwo(input_path string) int {
 				ov := graph.GetVertexAtPos(op)
 				dh := ov.Height - v.Height
 
-				if dh <= 1 {
+				if dh >= -1 {
 					graph.AddEdge(p, op)
 				}
 			}
@@ -327,7 +327,7 @@ func StarTwo(input_path string) int {
 				ov := graph.GetVertexAtPos(op)
 				dh := ov.Height - v.Height
 
-				if dh <= 1 {
+				if dh >= -1 {
 					graph.AddEdge(p, op)
 				}
 			}
@@ -339,7 +339,7 @@ func StarTwo(input_path string) int {
 				ov := graph.GetVertexAtPos(op)
 				dh := ov.Height - v.Height
 
-				if dh <= 1 {
+				if dh >= -1 {
 					graph.AddEdge(p, op)
 				}
 			}
@@ -351,25 +351,16 @@ func StarTwo(input_path string) int {
 				ov := graph.GetVertexAtPos(op)
 				dh := ov.Height - v.Height
 
-				if dh <= 1 {
+				if dh >= -1 {
 					graph.AddEdge(p, op)
 				}
 			}
 		}
 	}
 
-	results := make([]int, 0)
-	for _, start := range startingPoints {
-		result := graph.bfs(start, end)
+	startingSet := utils.Set[*Vertex]{}
+	startingSet.AddSlice(startingPoints)
+	result := graph.bfs(end, startingSet)
 
-		if result != 0 {
-			results = append(results, result)
-		}
-	}
-
-	sort.Slice(results, func(i, j int) bool {
-		return results[i] < results[j]
-	})
-
-	return results[0]
+	return result
 }
