@@ -11,7 +11,7 @@ func (q *Queue[T]) Dequeue() T {
 }
 
 func (q *Queue[T]) TryDequeue() (success bool, item *T) {
-	if q.Len() < 1 {
+	if q.Len() == 0 {
 		return false, nil
 	}
 
@@ -22,7 +22,7 @@ func (q *Queue[T]) TryDequeue() (success bool, item *T) {
 }
 
 func (q *Queue[T]) TryPeek() (success bool, item *T) {
-	if q.Len() < 1 {
+	if q.Len() == 0 {
 		return false, nil
 	}
 	return true, &q.items[0]

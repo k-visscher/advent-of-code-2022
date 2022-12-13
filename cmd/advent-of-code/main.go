@@ -5,6 +5,7 @@ import (
 	"advent-of-code-2022/internal/pkg/day10"
 	"advent-of-code-2022/internal/pkg/day11"
 	"advent-of-code-2022/internal/pkg/day12"
+	"advent-of-code-2022/internal/pkg/day13"
 	"advent-of-code-2022/internal/pkg/day2"
 	"advent-of-code-2022/internal/pkg/day3"
 	"advent-of-code-2022/internal/pkg/day4"
@@ -14,7 +15,6 @@ import (
 	"advent-of-code-2022/internal/pkg/day8"
 	"advent-of-code-2022/internal/pkg/day9"
 	"fmt"
-	"runtime/debug"
 	"time"
 )
 
@@ -29,8 +29,6 @@ func Time[T any](
 }
 
 func main() {
-	debug.SetGCPercent(-1)
-
 	Time(func() int {
 		return day1.StarOne("input_day_1.txt")
 	}, func(result int, duration time.Duration) {
@@ -157,5 +155,19 @@ func main() {
 		return day12.StarTwo("input_day_12.txt")
 	}, func(result int, duration time.Duration) {
 		fmt.Printf("day 12, star 2: %d, took: %s\n", result, duration)
+	})
+
+	// 5972 too low
+	// 5985 not correct
+	// 6123 too high
+	Time(func() int {
+		return day13.StarOne("input_day_13.txt")
+	}, func(result int, duration time.Duration) {
+		fmt.Printf("day 13, star 1: %d, took: %s\n", result, duration)
+	})
+	Time(func() int {
+		return day13.StarTwo("input_day_13.txt")
+	}, func(result int, duration time.Duration) {
+		fmt.Printf("day 13, star 2: %d, took: %s\n", result, duration)
 	})
 }
