@@ -47,11 +47,6 @@ const (
 	Normal VertexType = 2
 )
 
-type Position struct {
-	X int
-	Y int
-}
-
 type Vertex struct {
 	Type   VertexType
 	Parent *Vertex
@@ -59,20 +54,20 @@ type Vertex struct {
 }
 
 type Graph struct {
-	vertices map[Position]*Vertex
-	edges    map[Position]*utils.Set[*Vertex]
+	vertices map[utils.Position]*Vertex
+	edges    map[utils.Position]*utils.Set[*Vertex]
 }
 
-func (g *Graph) AddVertexAtPos(p Position, v *Vertex) {
+func (g *Graph) AddVertexAtPos(p utils.Position, v *Vertex) {
 	if g.vertices == nil {
-		g.vertices = make(map[Position]*Vertex)
+		g.vertices = make(map[utils.Position]*Vertex)
 	}
 	g.vertices[p] = v
 }
 
-func (g *Graph) AddEdge(p1 Position, p2 Position) {
+func (g *Graph) AddEdge(p1 utils.Position, p2 utils.Position) {
 	if g.edges == nil {
-		g.edges = make(map[Position]*utils.Set[*Vertex])
+		g.edges = make(map[utils.Position]*utils.Set[*Vertex])
 	}
 
 	_, found := g.edges[p1]
@@ -83,11 +78,11 @@ func (g *Graph) AddEdge(p1 Position, p2 Position) {
 	g.edges[p1].Add(v2)
 }
 
-func (g *Graph) GetEdgesAtPos(p Position) []*Vertex {
+func (g *Graph) GetEdgesAtPos(p utils.Position) []*Vertex {
 	return g.edges[p].ToSlice()
 }
 
-func (g *Graph) GetVertexAtPos(p Position) *Vertex {
+func (g *Graph) GetVertexAtPos(p utils.Position) *Vertex {
 	return g.vertices[p]
 }
 
@@ -128,7 +123,7 @@ func (g *Graph) bfs(s *Vertex, e utils.Set[*Vertex]) int {
 			break
 		}
 
-		vpos := Position{}
+		vpos := utils.Position{}
 		for ck, cv := range g.vertices {
 			if cv == v {
 				vpos = ck
@@ -197,7 +192,7 @@ func StarOne(input_path string) int {
 				end = v
 			}
 
-			graph.AddVertexAtPos(Position{X: x, Y: y}, v)
+			graph.AddVertexAtPos(utils.Position{X: x, Y: y}, v)
 		}
 	}
 
@@ -208,12 +203,12 @@ func StarOne(input_path string) int {
 
 	for y, row := range heightMap {
 		for x, _ := range row {
-			p := Position{X: x, Y: y}
+			p := utils.Position{X: x, Y: y}
 			v := graph.GetVertexAtPos(p)
 
 			// node to the left of us
 			if p.X-1 >= xMin {
-				op := Position{Y: p.Y, X: p.X - 1}
+				op := utils.Position{Y: p.Y, X: p.X - 1}
 
 				ov := graph.GetVertexAtPos(op)
 				dh := ov.Height - v.Height
@@ -225,7 +220,7 @@ func StarOne(input_path string) int {
 
 			// node to the right of us
 			if p.X+1 <= xMax {
-				op := Position{Y: p.Y, X: p.X + 1}
+				op := utils.Position{Y: p.Y, X: p.X + 1}
 
 				ov := graph.GetVertexAtPos(op)
 				dh := ov.Height - v.Height
@@ -237,7 +232,7 @@ func StarOne(input_path string) int {
 
 			// node above us
 			if p.Y-1 >= yMin {
-				op := Position{Y: p.Y - 1, X: p.X}
+				op := utils.Position{Y: p.Y - 1, X: p.X}
 
 				ov := graph.GetVertexAtPos(op)
 				dh := ov.Height - v.Height
@@ -249,7 +244,7 @@ func StarOne(input_path string) int {
 
 			// node below us
 			if p.Y+1 <= yMax {
-				op := Position{Y: p.Y + 1, X: p.X}
+				op := utils.Position{Y: p.Y + 1, X: p.X}
 
 				ov := graph.GetVertexAtPos(op)
 				dh := ov.Height - v.Height
@@ -294,7 +289,7 @@ func StarTwo(input_path string) int {
 				end = v
 			}
 
-			graph.AddVertexAtPos(Position{X: x, Y: y}, v)
+			graph.AddVertexAtPos(utils.Position{X: x, Y: y}, v)
 		}
 	}
 
@@ -305,12 +300,12 @@ func StarTwo(input_path string) int {
 
 	for y, row := range heightMap {
 		for x, _ := range row {
-			p := Position{X: x, Y: y}
+			p := utils.Position{X: x, Y: y}
 			v := graph.GetVertexAtPos(p)
 
 			// node to the left of us
 			if p.X-1 >= xMin {
-				op := Position{Y: p.Y, X: p.X - 1}
+				op := utils.Position{Y: p.Y, X: p.X - 1}
 
 				ov := graph.GetVertexAtPos(op)
 				dh := ov.Height - v.Height
@@ -322,7 +317,7 @@ func StarTwo(input_path string) int {
 
 			// node to the right of us
 			if p.X+1 <= xMax {
-				op := Position{Y: p.Y, X: p.X + 1}
+				op := utils.Position{Y: p.Y, X: p.X + 1}
 
 				ov := graph.GetVertexAtPos(op)
 				dh := ov.Height - v.Height
@@ -334,7 +329,7 @@ func StarTwo(input_path string) int {
 
 			// node above us
 			if p.Y-1 >= yMin {
-				op := Position{Y: p.Y - 1, X: p.X}
+				op := utils.Position{Y: p.Y - 1, X: p.X}
 
 				ov := graph.GetVertexAtPos(op)
 				dh := ov.Height - v.Height
@@ -346,7 +341,7 @@ func StarTwo(input_path string) int {
 
 			// node below us
 			if p.Y+1 <= yMax {
-				op := Position{Y: p.Y + 1, X: p.X}
+				op := utils.Position{Y: p.Y + 1, X: p.X}
 
 				ov := graph.GetVertexAtPos(op)
 				dh := ov.Height - v.Height
