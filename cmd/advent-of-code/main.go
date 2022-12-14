@@ -6,6 +6,7 @@ import (
 	"advent-of-code-2022/internal/pkg/day11"
 	"advent-of-code-2022/internal/pkg/day12"
 	"advent-of-code-2022/internal/pkg/day13"
+	"advent-of-code-2022/internal/pkg/day14"
 	"advent-of-code-2022/internal/pkg/day2"
 	"advent-of-code-2022/internal/pkg/day3"
 	"advent-of-code-2022/internal/pkg/day4"
@@ -122,7 +123,6 @@ func main() {
 	}, func(result int, duration time.Duration) {
 		fmt.Printf("day 9, star 1: %d, took: %s\n", result, duration)
 	})
-	//fmt.Printf("day 9, star 2: %d\n", day9.StarTwo("test_input_day_9_part_1.txt"))
 
 	Time(func() int {
 		return day10.StarOne("input_day_10.txt")
@@ -157,9 +157,6 @@ func main() {
 		fmt.Printf("day 12, star 2: %d, took: %s\n", result, duration)
 	})
 
-	// 5972 too low
-	// 5985 not correct
-	// 6123 too high
 	Time(func() int {
 		return day13.StarOne("input_day_13.txt")
 	}, func(result int, duration time.Duration) {
@@ -169,5 +166,16 @@ func main() {
 		return day13.StarTwo("input_day_13.txt")
 	}, func(result int, duration time.Duration) {
 		fmt.Printf("day 13, star 2: %d, took: %s\n", result, duration)
+	})
+
+	Time(func() int {
+		return day14.StarOne("input_day_14.txt")
+	}, func(result int, duration time.Duration) {
+		fmt.Printf("day 14, star 1: %d, took: %s\n", result, duration)
+	})
+	Time(func() int {
+		return day14.StarTwo("input_day_14.txt")
+	}, func(result int, duration time.Duration) {
+		fmt.Printf("day 14, star 2: %d, took: %s\n", result, duration)
 	})
 }

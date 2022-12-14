@@ -134,6 +134,63 @@ func NormalizePos(min utils.Position, p *utils.Position) {
 	p.X -= min.X
 }
 
+func IsHorizontal(p1 *utils.Position, p2 *utils.Position) bool {
+	return math.Abs(float64(p1.X)-float64(p2.X)) >= 1
+}
+
+func IsVertical(p1 *utils.Position, p2 *utils.Position) bool {
+	return math.Abs(float64(p1.Y)-float64(p2.Y)) >= 1
+}
+
+func LeftUnderIsClear(p *utils.Position, rows *[][]rune) bool {
+	if p.Y+1 >= len(*rows) {
+		return false
+	}
+	if p.X-1 < 0 {
+		return false
+	}
+
+	r := (*rows)[p.Y+1][p.X-1]
+	return r != '#' && r != 'o'
+}
+
+func RightUnderIsClear(p *utils.Position, rows *[][]rune) bool {
+	if p.Y+1 >= len(*rows) {
+		return false
+	}
+	if p.X+1 >= len((*rows)[0]) {
+		return false
+	}
+
+	r := (*rows)[p.Y+1][p.X+1]
+	return r != '#' && r != 'o'
+}
+
+func UnderIsClear(p *utils.Position, rows *[][]rune) bool {
+	if p.Y+1 >= len(*rows) {
+		return false
+	}
+
+	r := (*rows)[p.Y+1][p.X]
+	return r != '#' && r != 'o'
+}
+
+func Move(p *utils.Position, rows *[][]rune) {
+	if UnderIsClear(p, rows) {
+		p.Y += 1
+	} else if LeftUnderIsClear(p, rows) {
+		p.Y += 1
+		p.X -= 1
+	} else if RightUnderIsClear(p, rows) {
+		p.Y += 1
+		p.X += 1
+	} else {
+		return
+	}
+
+	Move(p, rows)
+}
+
 func StarOne(input_path string) int {
 	input := utils.MustReadFileToString(input_path)
 	lines := strings.Split(input, "\n")
@@ -173,13 +230,14 @@ func StarOne(input_path string) int {
 	NormalizePos(min, &max)
 	NormalizePos(min, &entry)
 
-	rows := make([][]rune, max.Y)
+	rows := make([][]rune, max.Y+1)
 	for i := range rows {
-		rows[i] = make([]rune, max.X)
+		rows[i] = make([]rune, max.X+1)
 		for j := range rows[i] {
 			rows[i][j] = '.'
 		}
 	}
+	rows[entry.Y][entry.X] = '+'
 
 	for _, scan := range scans {
 		for _, x := range scan {
@@ -187,5 +245,168 @@ func StarOne(input_path string) int {
 		}
 	}
 
-	return 0
+	for _, scan := range scans {
+		for i := 0; i < len(scan)-1; i++ {
+			p1 := scan[i]
+			p2 := scan[i+1]
+
+			if IsHorizontal(p1, p2) {
+				min := int(math.Min(float64(p1.X), float64(p2.X)))
+				max := int(math.Max(float64(p1.X), float64(p2.X)))
+
+				for x := min; x <= max; x++ {
+					rows[p1.Y][x] = '#'
+				}
+			} else if IsVertical(p1, p2) {
+				min := int(math.Min(float64(p1.Y), float64(p2.Y)))
+				max := int(math.Max(float64(p1.Y), float64(p2.Y)))
+
+				for y := min; y <= max; y++ {
+					rows[y][p1.X] = '#'
+				}
+			} else {
+				panic("wtf")
+			}
+		}
+	}
+
+	/*
+		for _, row := range rows {
+			fmt.Printf("%s\n", string(row))
+		}
+	*/
+
+	result := 0
+	for {
+		s := utils.Position{X: entry.X, Y: entry.Y}
+		Move(&s, &rows)
+		rows[s.Y][s.X] = 'o'
+
+		if s.X <= 0 || s.Y >= max.Y {
+			/*
+				fmt.Println()
+				for _, row := range rows {
+					fmt.Printf("%s\n", string(row))
+				}
+			*/
+			break
+		}
+		result++
+	}
+
+	return result
+}
+
+func StarTwo(input_path string) int {
+	input := utils.MustReadFileToString(input_path)
+	lines := strings.Split(input, "\n")
+
+	entry := utils.Position{X: 500, Y: 0}
+
+	min := utils.Position{X: -1, Y: 0}
+	max := utils.Position{X: -1, Y: 0}
+
+	scans := make([][]*utils.Position, 0)
+
+	for _, line := range lines {
+		scan := make([]*utils.Position, 0)
+
+		for _, rp := range strings.Split(line, "->") {
+			p := strings.Split(strings.TrimSpace(rp), ",")
+
+			pX := utils.MustParseAsInt(p[0])
+			pY := utils.MustParseAsInt(p[1])
+
+			ps := &utils.Position{X: pX, Y: pY}
+			if min.X == -1 && max.X == -1 {
+				min.X = pX
+				max.X = pX
+			}
+
+			min.X = int(math.Min(float64(min.X), float64(ps.X)))
+			max.X = int(math.Max(float64(max.X), float64(ps.X)))
+			max.Y = int(math.Max(float64(max.Y), float64(ps.Y)))
+
+			scan = append(scan, ps)
+		}
+
+		scans = append(scans, scan)
+	}
+
+	min.X -= 150 // IMPORTANT
+	max.X += 150 // IMPORTANT
+	max.Y += 2   // IMPORTANT
+
+	NormalizePos(min, &max)
+	NormalizePos(min, &entry)
+
+	rows := make([][]rune, max.Y+1)
+	for i := range rows {
+		rows[i] = make([]rune, max.X+1)
+		for j := range rows[i] {
+			rows[i][j] = '.'
+		}
+	}
+	rows[entry.Y][entry.X] = '+'
+
+	for _, scan := range scans {
+		for _, x := range scan {
+			NormalizePos(min, x)
+		}
+	}
+
+	for _, scan := range scans {
+		for i := 0; i < len(scan)-1; i++ {
+			p1 := scan[i]
+			p2 := scan[i+1]
+
+			if IsHorizontal(p1, p2) {
+				min := int(math.Min(float64(p1.X), float64(p2.X)))
+				max := int(math.Max(float64(p1.X), float64(p2.X)))
+
+				for x := min; x <= max; x++ {
+					rows[p1.Y][x] = '#'
+				}
+			} else if IsVertical(p1, p2) {
+				min := int(math.Min(float64(p1.Y), float64(p2.Y)))
+				max := int(math.Max(float64(p1.Y), float64(p2.Y)))
+
+				for y := min; y <= max; y++ {
+					rows[y][p1.X] = '#'
+				}
+			} else {
+				panic("wtf")
+			}
+		}
+	}
+
+	for x := 0; x <= max.X; x++ {
+		rows[max.Y][x] = '#'
+	}
+
+	/*
+		for _, row := range rows {
+			fmt.Printf("%s\n", string(row))
+		}
+	*/
+
+	result := 0
+	for {
+		s := utils.Position{X: entry.X, Y: entry.Y}
+		Move(&s, &rows)
+		rows[s.Y][s.X] = 'o'
+		result++
+
+		if s.X == entry.X && s.Y == entry.Y {
+			/*
+				fmt.Println()
+				for _, row := range rows {
+					fmt.Printf("%s\n", string(row))
+				}
+			*/
+			break
+		}
+	}
+
+	return result
 }

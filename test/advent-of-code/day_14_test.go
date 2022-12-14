@@ -14,3 +14,13 @@ func TestDay14StarOne(t *testing.T) {
 		t.Fatalf("expected: %d, got: %d", expected, actual)
 	}
 }
+
+func TestDay14StarTwo(t *testing.T) {
+	actual := day14.StarTwo("test_input_day_14.txt")
+
+	expected := 93
+
+	if actual != expected {
+		t.Fatalf("expected: %d, got: %d", expected, actual)
+	}
+}
