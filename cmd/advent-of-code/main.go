@@ -7,6 +7,7 @@ import (
 	"advent-of-code-2022/internal/pkg/day12"
 	"advent-of-code-2022/internal/pkg/day13"
 	"advent-of-code-2022/internal/pkg/day14"
+	"advent-of-code-2022/internal/pkg/day15"
 	"advent-of-code-2022/internal/pkg/day2"
 	"advent-of-code-2022/internal/pkg/day3"
 	"advent-of-code-2022/internal/pkg/day4"
@@ -177,5 +178,13 @@ func main() {
 		return day14.StarTwo("input_day_14.txt")
 	}, func(result int, duration time.Duration) {
 		fmt.Printf("day 14, star 2: %d, took: %s\n", result, duration)
+	})
+
+	// too low = 4033885
+	// too high = 5746822
+	Time(func() int {
+		return day15.StarOne("input_day_15.txt", 2_000_000)
+	}, func(result int, duration time.Duration) {
+		fmt.Printf("day 15, star 1: %d, took: %s\n", result, duration)
 	})
 }
